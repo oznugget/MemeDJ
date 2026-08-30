@@ -1,0 +1,23 @@
+{
+  "name": "memedj",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "sync": "npx cap sync android",
+    "open": "npx cap open android",
+    "build:android": "npm run build && npx cap sync android"
+  },
+  "devDependencies": {
+    "vite-plugin-elm": "^3.0.1"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/cli": "^8.5.0",
+    "@capacitor/core": "^8.5.0"
+  }
+}
