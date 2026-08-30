@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>MemeDJ</title>
+    <style>
+        /* ----- RESET & BASE ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            /* Custom background image – with fallback grey */
+            background: #18181b url('/bg.jpg') center / cover no-repeat fixed;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 30px 20px;
+            color: #f4f4f5;
+            position: relative;
+        }
+        /* Dark overlay behind content to make tiles readable */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(24, 24, 27, 0.65); /* dark grey overlay */
+            z-index: 0;
+            pointer-events: none;
+        }
+        #app {
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ----- HEADER ----- */
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #ec4e7a;
+            letter-spacing: -1px;
+            text-shadow: 0 0 30px rgba(236, 78, 122, 0.25);
+        }
+        .header .subhead {
+            color: #a1a1aa;
+            font-size: 0.95rem;
+            margin-top: 4px;
+            border-bottom: 1px solid #3f3f46;
+            padding-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .header .subhead span {
+            background: #27272a;
+            padding: 4px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            color: #d4d4d8;
+        }
+
+        /* ----- GRID – FIXED 3 COLUMNS ----- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        /* ----- SOUND BUTTONS – SQUARE TILES (1:1 aspect ratio) ----- */
+        .sound-btn {
+            background: #27272a;          /* solid dark grey */
+            border: 2px solid #3f3f46;
+            border-radius: 18px;
+            padding: 12px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            color: #f4f4f5;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            /* Make it square */
+            aspect-ratio: 1 / 1;
+            width: 100%;
+        }
+        .sound-btn:hover {
+            background: #3f3f46;
+            border-color: #52525b;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+        }
+        .sound-btn:active {
+            transform: scale(0.94);
+            background: #ec4e7a;
+            border-color: #ec4e7a;
+            box-shadow: 0 0 30px rgba(236, 78, 122, 0.3);
+        }
+        .sound-btn .emoji {
+            font-size: 2.8rem;
+            line-height: 1.1;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+        }
+        .sound-btn .label {
+            text-align: center;
+            line-height: 1.2;
+            font-size: 0.85rem;
+            letter-spacing: 0.2px;
+            color: #d4d4d8;
+            max-width: 100%;
+            word-break: break-word;
+        }
+        /* ----- PLAYING STATE – bright pink glow ----- */
+        .sound-btn.playing {
+            background: #ec4e7a;
+            border-color: #ff6b8a;
+            box-shadow: 0 0 40px rgba(236, 78, 122, 0.4), inset 0 0 20px rgba(255,255,255,0.05);
+            transform: scale(1.02);
+        }
+        .sound-btn.playing .label {
+            color: #ffffff;
+        }
+        .sound-btn.playing .emoji {
+            animation: pulse-emoji 0.6s ease-in-out infinite alternate;
+        }
+        @keyframes pulse-emoji {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.12); }
+        }
+
+        /* ----- FOOTER ----- */
+        .footer {
+            text-align: center;
+            color: #3f3f46;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            padding-top: 12px;
+            border-top: 1px solid #3f3f46;
+        }
+        .footer span {
+            background: #27272a;
+            padding: 2px 14px;
+            border-radius: 20px;
+            color: #71717a;
+        }
+
+        /* ----- RESPONSIVE: 3 columns → 2 → 1 (square stays square) ----- */
+        @media (max-width: 650px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 14px;
+            }
+            .sound-btn .emoji {
+                font-size: 2.4rem;
+            }
+            .sound-btn .label {
+                font-size: 0.8rem;
+            }
+            .header h1 {
+                font-size: 2.5rem;
+            }
+        }
+        @media (max-width: 420px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr); /* still 2 cols – keeps squares compact */
+                gap: 12px;
+            }
+            .sound-btn {
+                padding: 8px 4px;
+                border-radius: 14px;
+            }
+            .sound-btn .emoji {
+                font-size: 2rem;
+            }
+            .sound-btn .label {
+                font-size: 0.7rem;
+            }
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+        /* For very tiny screens, keep 2 cols but reduce gap */
+        @media (max-width: 360px) {
+            .grid {
+                gap: 8px;
+            }
+            .sound-btn .emoji {
+                font-size: 1.6rem;
+            }
+            .sound-btn .label {
+                font-size: 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
