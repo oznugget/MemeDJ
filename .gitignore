@@ -1,0 +1,23 @@
+@"
+# Dependencies (don't upload these - they are huge!)
+node_modules/
+elm-stuff/
+
+# Build outputs (these are generated from your source code)
+dist/
+android/
+.vite/
+*.log
+
+# OS junk files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Capacitor temporary files
+.capacitor/
+"@ | Out-File -FilePath .gitignore -Encoding utf8
